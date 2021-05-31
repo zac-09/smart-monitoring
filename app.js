@@ -5,16 +5,18 @@ const helmet = require('helmet');
 const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
 const hpp = require('hpp');
-const path = require('path');
+
 const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errorController');
-const tourRouter = require('./routes/tourRoutes');
-const viewRouter = require('./routes/viewRoutes');
+
 const cookieParser = require('cookie-parser')
 const userRouter = require('./routes/userRoutes');
-const bookingRouter = require('./routes/bookingRoutes');
 
-const reviewRouter = require('./routes/reviewRoutes');
+
+const dataRouter =  require('./routes/dataRouter')
+const switchRouter =  require('./routes/switchRouter')
+
+
 const app = express();
 const cors = require('cors')
  
@@ -22,11 +24,6 @@ const cors = require('cors')
 // 1) GLOBAL MIDDLEWARES
 // Set security HTTP headers
 
-app.set('view engine', 'pug');
-app.set('views', path.join(__dirname, 'views'));
-// Serving static files
-// app.use(express.static(`${__dirname}/public`));
-app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(helmet());
 app.use(cors({
@@ -55,6 +52,7 @@ app.use(express.urlencoded({extended:true,limit:'10kb'}))
 // Data sanitization against NoSQL query injection
 app.use(mongoSanitize());
 
+
 // Data sanitization against XSS
 app.use(xss());
 
@@ -81,12 +79,11 @@ app.use((req, res, next) => {
 
 // 3) ROUTES
 
-app.use('/api/v1/tours', tourRouter);
-app.use('/api/v1/users', userRouter);
-app.use('/api/v1/bookings',bookingRouter);
 
-app.use('/api/v1/reviews', reviewRouter);
-app.use('/',viewRouter);
+app.use('/api/v1/users', userRouter);
+app.use('/api/v1/data',dataRouter)
+app.use('/api/v1/switch',switchRouter)
+
 
 
 app.all('*', (req, res, next) => {
