@@ -5,7 +5,7 @@ const User = require('./../models/userModel');
 const catchAsync = require('./../utils/catchAsync');
 const AppError = require('./../utils/appError');
 const Email = require('./../utils/email');
- 
+
 const signToken = id => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRES_IN
@@ -14,10 +14,12 @@ const signToken = id => {
 
 const createSendToken = (user, statusCode, res) => {
   const token = signToken(user._id);
+  const expirationtime = new Date(
+    Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 60 * 60 * 1000
+  );
+  const expiresIn = process.env.JWT_COOKIE_EXPIRES_IN * 60 * 60 * 1000;
   const cookieOptions = {
-    expires: new Date(
-      Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
-    ), 
+    expires: expirationtime,
     httpOnly: true
   };
   if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
@@ -30,6 +32,7 @@ const createSendToken = (user, statusCode, res) => {
   res.status(statusCode).json({
     status: 'success',
     token,
+    expiresIn,
     data: {
       user
     }
@@ -154,11 +157,11 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
     //   email: user.email,
     //   subject: 'Your password reset token (valid for 10 min)',
     //   message
-    // });` 
+    // });`
     const resetURL = `${req.protocol}://${req.get(
       'host'
     )}/api/v1/users/resetPassword/${resetToken}`;
-    await new Email(user,resetURL).sendPasswordReset();
+    await new Email(user, resetURL).sendPasswordReset();
     res.status(200).json({
       status: 'success',
       message: 'Token sent to email!'
