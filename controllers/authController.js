@@ -5,14 +5,14 @@ const User = require('./../models/userModel');
 const catchAsync = require('./../utils/catchAsync');
 const AppError = require('./../utils/appError');
 const Email = require('./../utils/email');
-
+const Device = require('./../models/deviceModel');
 const signToken = id => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRES_IN
   });
 };
 
-const createSendToken = (user, statusCode, res) => {
+const createSendToken = async (user, statusCode, res) => {
   const token = signToken(user._id);
   const expirationtime = new Date(
     Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 60 * 60 * 1000
@@ -29,12 +29,14 @@ const createSendToken = (user, statusCode, res) => {
   // Remove password from output
   user.password = undefined;
 
+  const devices = await Device.find({ owner: user._id });
   res.status(statusCode).json({
     status: 'success',
     token,
     expiresIn,
     data: {
-      user
+      user,
+      devices
     }
   });
 };

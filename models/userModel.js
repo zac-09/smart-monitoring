@@ -16,8 +16,8 @@ const userSchema = new mongoose.Schema({
     validate: [validator.isEmail, 'Please provide a valid email']
   },
   photo: {
-    type:String,
-    default:'default.jpg'
+    type: String,
+    default: null
   },
   role: {
     type: String,
@@ -48,6 +48,11 @@ const userSchema = new mongoose.Schema({
     type: Boolean,
     default: true,
     select: false
+  },
+  createdAt: {
+    type: Date,
+
+    default: Date.now()
   }
 });
 

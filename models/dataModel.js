@@ -2,6 +2,10 @@ const mongoose = require('mongoose');
 
 const dataSchema = new mongoose.Schema(
   {
+    device_imei: {
+      type: String,
+      required: [true, 'you must supply deviceID']
+    },
     current: {
       type: Number,
       required: [true, 'you must suppy a current value']
@@ -10,9 +14,12 @@ const dataSchema = new mongoose.Schema(
       type: Number,
       required: [true, 'you must suppy a voltage value']
     },
+    power: {
+      type: Number
+    },
     createdAt: {
       type: Date,
-      value: Date.now
+      default: Date.now()
     }
   },
   {
@@ -25,6 +32,11 @@ const dataSchema = new mongoose.Schema(
     toObject: { value: true }
   }
 );
+
+dataSchema.pre('save', async function(next) {
+  this.power = this.current * this.voltage;
+  next();
+});
 
 const Data = mongoose.model('Data', dataSchema);
 module.exports = Data;
