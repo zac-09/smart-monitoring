@@ -11,9 +11,7 @@ exports.createData = catchAsync(async (req, res, next) => {
   console.log(doc);
   res.status(201).json({
     status: 'success',
-    data: {
-      doc
-    }
+    data: doc[0]
   });
 });
 exports.getDeviceData = catchAsync(async (req, res, next) => {

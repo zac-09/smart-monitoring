@@ -7,16 +7,12 @@ const relaySchema = new mongoose.Schema(
       ref: 'Device',
       required: [true, 'you must supply a device imei']
     },
-    relay_1: {
+    relay: {
       type: Number,
       required: [true, 'you must suppy a current value'],
       default: 0
     },
-    relay_2: {
-      type: Number,
-      required: [true, 'you must suppy a voltage value'],
-      default: 0
-    },
+
     createdAt: {
       type: Date,
       value: Date.now()
