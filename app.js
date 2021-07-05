@@ -28,12 +28,13 @@ app.use(
     credentials: true
   })
 );
+app.all('*',cors())
 app.options('*', cors());
 
 // Development logging
-if (process.env.NODE_ENV === 'development') {
+// if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
-}
+// }
 
 // Limit requests from same API
 const limiter = rateLimit({

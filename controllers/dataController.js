@@ -3,8 +3,18 @@ const Data = require('./../models/dataModel');
 const Relay = require('./../models/RelayModel');
 const Device = require('./../models/deviceModel');
 const AppError = require('../utils/appError');
+const server = require('./../server');
+const GET_DEVICE_PARAMS_EVENT = 'GET_DEVICE_PARAMATERS';
+
 exports.createData = catchAsync(async (req, res, next) => {
+  // server.io.on('connection', socket => {
+  //   console.log('client successfully', socket.id);
+  //   socket.emit(GET_DEVICE_PARAMS_EVENT, 'awesome');
+  // });
+  // server.io.emit()
   post = await Data.create({ ...req.body, createdAt: new Date() });
+  server.io.emit(GET_DEVICE_PARAMS_EVENT, post);
+
   doc = await Relay.find()
     .sort({ _id: -1 })
     .limit(1);
@@ -18,7 +28,7 @@ exports.getDeviceData = catchAsync(async (req, res, next) => {
   // console.log("from controller",)
   const deviceID = req.query.device_id;
   const userId = req.user._id;
-  console.log('the id is', userId);
+  // console.log('the id is', userId);
   const device = await Device.findOne({ owner: userId });
   if (!device) {
     return next(
