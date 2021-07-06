@@ -3,19 +3,21 @@ const Data = require('./../models/dataModel');
 const Relay = require('./../models/RelayModel');
 const Device = require('./../models/deviceModel');
 const AppError = require('../utils/appError');
-const server = require('./../server');
+const socket = require('./../server');
 const GET_DEVICE_PARAMS_EVENT = 'GET_DEVICE_PARAMATERS';
 
 exports.createData = catchAsync(async (req, res, next) => {
-  // server.io.on('connection', socket => {
-  //   console.log('client successfully', socket.id);
-  //   socket.emit(GET_DEVICE_PARAMS_EVENT, 'awesome');
-  // });
-  // server.io.emit()
-  post = await Data.create({ ...req.body, createdAt: new Date() });
-  server.io.emit(GET_DEVICE_PARAMS_EVENT, post);
+  const device = await Device.findOne({ device_imei: req.body.device_imei });
+  if (!device) {
+    return next(new AppError('device imei is inccorect', 400));
+  }
+  device.status = 'active';
+  await device.save();
+  const post = await Data.create({ ...req.body, createdAt: new Date() });
 
-  doc = await Relay.find()
+  socket.io.emit(`${GET_DEVICE_PARAMS_EVENT}-${post.device_imei}`, post);
+
+  doc = await Relay.find({ device_imei: post.device_imei })
     .sort({ _id: -1 })
     .limit(1);
   console.log(doc);
@@ -44,3 +46,5 @@ exports.getDeviceData = catchAsync(async (req, res, next) => {
     data: deviceData
   });
 });
+
+

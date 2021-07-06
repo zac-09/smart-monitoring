@@ -5,6 +5,10 @@ const deviceSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Device must have a name']
   },
+  device_type: {
+    type: String,
+    required: [true, 'Device must have a type']
+  },
   device_imei: {
     type: mongoose.Schema.ObjectId
   },
@@ -22,7 +26,7 @@ const deviceSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ['active', 'deactive', 'offline'],
+    enum: ['active', 'deactive', 'offline', 'online', 'deleted'],
     default: 'offline'
   },
   createdAt: {

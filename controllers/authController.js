@@ -29,7 +29,10 @@ const createSendToken = async (user, statusCode, res) => {
   // Remove password from output
   user.password = undefined;
 
-  const devices = await Device.find({ owner: user._id });
+  const devices = await Device.find({
+    owner: user._id,
+    status: { $ne: 'deleted' }
+  });
   res.status(statusCode).json({
     status: 'success',
     token,
