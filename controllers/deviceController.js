@@ -1,10 +1,15 @@
 const catchAsync = require('../utils/catchAsync');
 const Device = require('./../models/deviceModel');
-
+const Relay = require('./../models/RelayModel');
 exports.registerDevice = catchAsync(async (req, res, next) => {
   const user = req.user;
 
-  device = await Device.create({ ...req.body, owner: user._id });
+  const device = await Device.create({ ...req.body, owner: user._id });
+  const relay = await Relay.create({
+    device_imei: device.device_imei,
+    relay: 0,
+    createdAt: new Date()
+  });
   const devices = await Device.find({
     owner: user._id,
     status: { $ne: 'deleted' }

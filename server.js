@@ -13,9 +13,9 @@ process.on('uncaughtException', err => {
 dotenv.config({ path: './config.env' });
 const GET_DEVICE_PARAMS_EVENT = 'GET_DEVICE_PARAMATERS';
 
-// const DB = process.env.DATABASE_LOCAL;
+const DB = process.env.DATABASE_LOCAL;
  
-const DB = process.env.DATABASE;
+// const DB = process.env.DATABASE;
 
 console.log('db is', DB);
 

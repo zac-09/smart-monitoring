@@ -13,11 +13,9 @@ const deviceSchema = new mongoose.Schema({
     type: mongoose.Schema.ObjectId
   },
   location: {
-    type: {
-      type: String,
-      default: 'Point',
-      enum: ['Point']
-    }
+    type: String,
+    required: [true, 'Device must have a location']
+
   },
   owner: {
     type: mongoose.Schema.ObjectId,
@@ -27,6 +25,11 @@ const deviceSchema = new mongoose.Schema({
   status: {
     type: String,
     enum: ['active', 'deactive', 'offline', 'online', 'deleted'],
+    default: 'active'
+  },
+  logging_status: {
+    type: String,
+    enum: ['offline', 'online'],
     default: 'offline'
   },
   createdAt: {

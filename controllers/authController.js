@@ -259,3 +259,19 @@ exports.isLoggedIn = async (req, res, next) => {
   }
   next();
 };
+
+exports.confirmPassword = catchAsync(async (req, res, next) => {
+  console.log('password', req.body);
+
+  const user = await User.findById(req.user._id).select('+password');
+
+  console.log('reached here', user);
+  if (
+    !user ||
+    !(await user.correctPassword(req.body.password, user.password))
+  ) {
+    return next(new AppError('Incorrect  password', 401));
+  }
+
+  res.status(200).json({ status: 'success', message: 'password matches' });
+});
