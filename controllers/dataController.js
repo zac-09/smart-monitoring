@@ -27,7 +27,7 @@ exports.createData = catchAsync(async (req, res, next) => {
     .sort({ _id: -1 })
     .limit(1);
   console.log(doc);
-  res.status(201).json({
+  res.status(200).json({
     status: 'success',
     relay: doc[0].relay
   });
