@@ -14,7 +14,7 @@ exports.createData = catchAsync(async (req, res, next) => {
   device.logging_status = 'online';
   await device.save();
   const post = await Data.create({ ...req.body, createdAt: new Date() });
-  if (socket) {
+  if (socket.io) {
     socket.io.emit(`${GET_DEVICE_PARAMS_EVENT}-${post.device_imei}`, post);
   }
 
