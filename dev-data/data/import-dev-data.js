@@ -5,14 +5,13 @@ const Tour = require('./../../models/tourModel');
 const User = require('./../../models/userModel');
 const Review = require('./../../models/reviewModel');
 
-
+const District = require('./../../models/districtModel');
 dotenv.config({ path: './config.env' });
 
 const DB = process.env.DATABASE_LOCAL;
- 
 
 mongoose
-  .connect("mongodb://localhost:27017/natours", {
+  .connect('mongodb://localhost:27017/smart', {
     useNewUrlParser: true,
     useCreateIndex: true,
     useFindAndModify: false
@@ -20,23 +19,23 @@ mongoose
   .then(() => console.log('DB connection successful!'));
 
 // READ JSON FILE
-const tours = JSON.parse(
-  fs.readFileSync(`${__dirname}/tours.json`, 'utf-8')
+// const tours = JSON.parse(fs.readFileSync(`${__dirname}/tours.json`, 'utf-8'));
+// const users = JSON.parse(fs.readFileSync(`${__dirname}/users.json`, 'utf-8'));
+// const reviews = JSON.parse(
+//   fs.readFileSync(`${__dirname}/reviews.json`, 'utf-8')
+// );
+const districts = JSON.parse(
+  fs.readFileSync(`${__dirname}/districts.json`, 'utf-8')
 );
-const users = JSON.parse(
-  fs.readFileSync(`${__dirname}/users.json`, 'utf-8')
-);
-const reviews = JSON.parse(
-  fs.readFileSync(`${__dirname}/reviews.json`, 'utf-8')
-);
+
 // IMPORT DATA INTO DB
 const importData = async () => {
   try {
-    await Tour.create(tours);
-    await User.create(users,{validateBeforeSave:false});
+    // await Tour.create(tours);
+    // await User.create(users,{validateBeforeSave:false});
 
-    await Review.create(reviews);
-
+    // await Review.create(reviews);
+    await District.create(districts.districts);
     console.log('Data successfully loaded!');
   } catch (err) {
     console.log(err);
@@ -47,11 +46,10 @@ const importData = async () => {
 // DELETE ALL DATA FROM DB
 const deleteData = async () => {
   try {
-    await Tour.deleteMany();
-    await User.deleteMany();
-    await Review.deleteMany();
-
-
+  //   await Tour.deleteMany();
+  //   await User.deleteMany();
+  //   await Review.deleteMany();
+await District.deleteMany()
     console.log('Data successfully deleted!');
   } catch (err) {
     console.log(err);

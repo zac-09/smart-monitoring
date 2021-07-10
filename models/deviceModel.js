@@ -14,7 +14,8 @@ const deviceSchema = new mongoose.Schema({
   },
   location: {
     type: String,
-    required: [true, 'Device must have a location']
+    required: [true, 'Device must have a location'],
+    ref:'District'
 
   },
   owner: {

@@ -1,3 +1,4 @@
+const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
 const Device = require('./../models/deviceModel');
 const Relay = require('./../models/RelayModel');
@@ -48,5 +49,25 @@ exports.deleteDevice = catchAsync(async (req, res, next) => {
 
   res.status(204).json({
     status: 'sucess'
+  });
+});
+
+exports.updateDevice = catchAsync(async (req, res, next) => {
+  console.log("the locations is",req.body.device_location)
+  const device = await Device.findByIdAndUpdate(
+    req.body.device_imei,
+    req.body,
+    {
+      new: true,
+      runValidators: true
+    }
+  );
+
+  if (!device) {
+    return next(new AppError("Couldn'r find device with that id", 404));
+  }
+  res.status(200).json({
+    status: 'sucess',
+    device
   });
 });

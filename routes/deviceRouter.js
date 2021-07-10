@@ -11,7 +11,12 @@ router.post(
 router.delete(
   '/deleteDevice',
   authController.protect,
-  deviceController.deleteDevice 
+  deviceController.deleteDevice
+);
+router.put(
+  '/updateDevice',
+  authController.protect,
+  deviceController.updateDevice
 );
 router.get(
   '/getAll',
