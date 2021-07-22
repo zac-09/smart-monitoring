@@ -14,7 +14,7 @@ dotenv.config({ path: './config.env' });
 const GET_DEVICE_PARAMS_EVENT = 'GET_DEVICE_PARAMATERS';
 
 // const DB = process.env.DATABASE_LOCAL;
- 
+  
 const DB = process.env.DATABASE;
 
 console.log('db is', DB);
@@ -38,7 +38,7 @@ io.on('connection', socket => {
   console.log('client successfully', socket.id);
   exports.io = socket;
 });
-
+ 
 process.on('unhandledRejection', err => {
   console.log('UNHANDLED REJECTION! 💥 Shutting down...');
   console.log(err.name, err.message);

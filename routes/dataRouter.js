@@ -6,6 +6,13 @@ const authController = require('./../controllers/authController');
 const router = express.Router();
 
 router.post('/', controller.createData);
-router.get('/getDeviceData', authController.protect, controller.getDeviceData);
+router.use(authController.protect);
+router.get('/getDeviceData', controller.getDeviceData);
+router.get('/getDeviceStats/monthly', controller.getDeviceMonthlyData);
+router.get('/getDeviceStats/annual', controller.getDeviceAnnualData);
+router.get('/getDeviceStats/weekly', controller.getDeviceWeeklyData);
+router.get('/getDeviceStats/byMonth', controller.getDeviceDataByMonth);
+router.get('/getDeviceStats/byDay', controller.getDataByDay);
+router.get('/getDeviceStats/realtime', controller.getRealtimeData);
 
 module.exports = router;
