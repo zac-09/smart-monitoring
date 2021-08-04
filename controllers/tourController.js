@@ -3,7 +3,7 @@ const catchAsync = require('./../utils/catchAsync');
 const AppError = require('./../utils/appError');
 const factory = require('./handlerFactory');
 const multer = require('multer');
-const sharp = require('sharp');
+// const sharp = require('sharp');
 
 const multerStorage = multer.memoryStorage();
 const multerFilter = (req, file, cb) => {
@@ -31,11 +31,11 @@ exports.resizeTourImages = catchAsync(async (req, res, next) => {
   console.log("hi after")
 
   req.body.imageCover = `tour-${req.params.id}-${Date.now()}-cover.jpeg`;
-  await sharp(req.files.imageCover[0].buffer)
-    .resize(2000, 1333)
-    .toFormat('jpeg')
-    .jpeg({ quality: 90 })
-    .toFile(`public/img/tours/${req.body.imageCover}`);
+  // await sharp(req.files.imageCover[0].buffer)
+  //   .resize(2000, 1333)
+  //   .toFormat('jpeg')
+  //   .jpeg({ quality: 90 })
+  //   .toFile(`public/img/tours/${req.body.imageCover}`);
   // req.body.imageCover = imageCoverFilename;
 
   //images
@@ -43,11 +43,11 @@ exports.resizeTourImages = catchAsync(async (req, res, next) => {
   await Promise.all(
     req.files.images.map(async (file, i) => {
       const filename = `tour-${req.params.id}-${Date.now()}-${i + 1}.jpeg`;
-      await sharp(file.buffer)
-        .resize(2000, 1333)
-        .toFormat('jpeg')
-        .jpeg({ quality: 90 })
-        .toFile(`public/img/tours/${filename}`);
+      // await sharp(file.buffer)
+      //   .resize(2000, 1333)
+      //   .toFormat('jpeg')
+      //   .jpeg({ quality: 90 })
+      //   .toFile(`public/img/tours/${filename}`);
       req.body.images.push(filename);
     })
   );

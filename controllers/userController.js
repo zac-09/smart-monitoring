@@ -3,7 +3,7 @@ const catchAsync = require('./../utils/catchAsync');
 const AppError = require('./../utils/appError');
 const factory = require('./handlerFactory');
 const multer = require('multer');
-const sharp = require('sharp');
+// const sharp = require('sharp');
 // const multerStorage = multer.diskStorage({
 //   destination: (req, file, cb) => {
 //     cb(null, 'public/img/users');
@@ -43,12 +43,12 @@ exports.resizeUserPhoto = catchAsync( async(req, res, next) => {
     return next(); 
   }
   req.file.filename = `user-${req.user.id}-${Date.now()}.jpeg` 
-  await sharp(req.file.buffer)
-    .resize(500, 500)
-    .toFormat('jpeg') 
-    .jpeg({ quality: 90 })
-    .toFile(`public/img/users/${req.file.filename}`);
-    next()
+  // await sharp(req.file.buffer)
+  //   .resize(500, 500)
+  //   .toFormat('jpeg') 
+  //   .jpeg({ quality: 90 })
+  //   .toFile(`public/img/users/${req.file.filename}`);
+  //   next()
 });
 exports.getAllUsers = factory.getAll(User);
 exports.getMe = (req, res, next) => {
