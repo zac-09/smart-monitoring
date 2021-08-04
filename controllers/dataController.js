@@ -4,8 +4,10 @@ const Relay = require('./../models/RelayModel');
 const Device = require('./../models/deviceModel');
 const AppError = require('../utils/appError');
 const socket = require('./../server');
-const GET_DEVICE_PARAMS_EVENT = 'GET_DEVICE_PARAMATERS';
+const moment = require('moment');
 
+const GET_DEVICE_PARAMS_EVENT = 'GET_DEVICE_PARAMATERS';
+process.env.TZ = 'Africa/Nairobi';
 exports.createData = catchAsync(async (req, res, next) => {
   const device = await Device.findOne({ device_imei: req.body.device_imei });
   if (!device) {
@@ -13,7 +15,11 @@ exports.createData = catchAsync(async (req, res, next) => {
   }
   device.logging_status = 'online';
   await device.save();
-  const post = await Data.create({ ...req.body, createdAt: new Date() });
+  const post = await Data.create({
+    ...req.body,
+    createdAt: new Date(),
+    device_imei: req.body.device_seria
+  });
   if (socket.io) {
     socket.io.emit(`${GET_DEVICE_PARAMS_EVENT}-${post.device_imei}`, post);
     console.log(
@@ -427,7 +433,8 @@ exports.getRealtimeData = catchAsync(async (req, res, next) => {
   const paramMonth = req.query.month;
   const paramDay = req.query.day;
 
-  // console.log('the week is', typeof paramWeek);
+  process.env.TZ = 'Africa/Kampala';
+  console.log(new Date().toString());
   const userId = req.user._id;
 
   const device = await Device.findOne({ owner: userId, device_imei: deviceID });
@@ -441,6 +448,10 @@ exports.getRealtimeData = catchAsync(async (req, res, next) => {
     console.log('device is', device);
     return next(new AppError('the device has been deleted', 400));
   }
+  Date.prototype.addHours = function(h) {
+    this.setTime(this.getTime() + h * 60 * 60 * 1000);
+    return this;
+  };
 
   const data = await Data.aggregate([
     {
@@ -451,8 +462,8 @@ exports.getRealtimeData = catchAsync(async (req, res, next) => {
     {
       $match: {
         createdAt: {
-          $gte: new Date(`${year}-01-01`),
-          $lte: new Date(`${year}-12-31`)
+          $gte: new Date(moment(`${year}-01-01`)).addHours(3),
+          $lte: new Date(moment(`${year}-12-31`)).addHours(3)
         }
       }
     },
