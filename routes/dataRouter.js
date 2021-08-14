@@ -8,6 +8,8 @@ const router = express.Router();
 router.post('/', controller.createData);
 router.use(authController.protect);
 router.get('/getDeviceData', controller.getDeviceData);
+router.get('/getDeviceLogs/:id', controller.getDeviceLogs);
+
 router.get('/getDeviceStats/monthly', controller.getDeviceMonthlyData);
 router.get('/getDeviceStats/annual', controller.getDeviceAnnualData);
 router.get('/getDeviceStats/weekly', controller.getDeviceWeeklyData);

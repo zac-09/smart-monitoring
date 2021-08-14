@@ -71,3 +71,4 @@ exports.updateDevice = catchAsync(async (req, res, next) => {
     device
   });
 });
+

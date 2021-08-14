@@ -609,8 +609,25 @@ exports.getDeviceAnnualData = catchAsync(async (req, res, next) => {
   });
 });
 
-// [
-//   { name: 'filename', url: 'fileurl' },
-//   { name: 'filename1', url: 'fileurl1' },
-//   { name: 'filename2', url: 'fileurl2' }
-// ];
+exports.getDeviceLogs = catchAsync(async (req, res, next) => {
+  const user = req.user;
+  const deviceID = req.params.id;
+  console.log('data reveice', user, deviceID);
+  const device = await Device.findOne({
+    owner: user._id,
+    device_imei: deviceID
+  });
+  if (!device) {
+    return next(
+      new AppError('You cant access data of a device you dont own', 403)
+    );
+  }
+
+  const logs = await Data.find({ device_imei: deviceID }).sort({ _id: -1 });
+  res.status(200).json({
+    status: 'success',
+    logs
+  });
+
+  res;
+});
