@@ -47,8 +47,7 @@ const createSendToken = async (user, statusCode, res) => {
 
 exports.signup = catchAsync(async (req, res, next) => {
   const newUser = await User.create({
-    ...req.body,
-   
+    ...req.body
   });
   const url = `${req.protocol}://${req.get('host')}/me`;
   await new Email(newUser, url).sendWelcome();
@@ -130,8 +129,11 @@ exports.protect = catchAsync(async (req, res, next) => {
 
 exports.restrictTo = (...roles) => {
   return (req, res, next) => {
+    console.log('rreached here');
+
     // roles ['admin', 'lead-guide']. role='user'
     if (!roles.includes(req.user.role)) {
+      console.log('user restricted');
       return next(
         new AppError('You do not have permission to perform this action', 403)
       );
