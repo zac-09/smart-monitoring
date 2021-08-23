@@ -46,12 +46,20 @@ const createSendToken = async (user, statusCode, res) => {
 };
 
 exports.signup = catchAsync(async (req, res, next) => {
+  const user = await User.findOne({ email: req.body.email });
+  if (user) {
+    return next(new AppError('Email has already been used!', 400));
+  }
   const newUser = await User.create({
     ...req.body
   });
   const url = `${req.protocol}://${req.get('host')}/me`;
   await new Email(newUser, url).sendWelcome();
-  createSendToken(newUser, 201, res);
+  res.status(201).json({
+    status: 'success',
+    message:
+      'Account has been successfullt created please visit your email to confirm your account'
+  });
 });
 
 exports.login = catchAsync(async (req, res, next) => {
@@ -63,6 +71,14 @@ exports.login = catchAsync(async (req, res, next) => {
   }
   // 2) Check if user exists && password is correct
   const user = await User.findOne({ email }).select('+password');
+  if (user.status === false) {
+    return next(
+      new AppError(
+        'Account not Verified, Please go to your email and verify your account',
+        400
+      )
+    );
+  }
 
   if (!user || !(await user.correctPassword(password, user.password))) {
     return next(new AppError('Incorrect email or password', 401));
@@ -176,6 +192,7 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
     user.passwordResetToken = undefined;
     user.passwordResetExpires = undefined;
     await user.save({ validateBeforeSave: false });
+    console.log('the erro', err);
 
     return next(
       new AppError('There was an error sending the email. Try again later!'),

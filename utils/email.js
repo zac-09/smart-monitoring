@@ -1,39 +1,38 @@
 const nodemailer = require('nodemailer');
-const pug =  require('pug')
-const HtmlToText = require('html-to-text')
+const pug = require('pug');
+const HtmlToText = require('html-to-text');
 module.exports = class Email {
   constructor(user, url) {
     this.to = user.email;
-    this.firstName = user.name.split('')[0];
+    this.firstName = user.first_name;
     this.url = url;
-    this.from = ` zac <${process.env.EMAIL_FROM}>`;
+    this.from = ` Run Automations <info@runautomations.com>`;
   }
   newTransport() {
     if (process.env.NODE_ENV === 'production') {
       return nodemailer.createTransport({
-        service:'SendGrid',
-        auth:{
-          user:process.env.SENDGRID_USERNAME,
-          pass:process.env.SENDGRID_PASSWORD
+        service: 'SendGrid',
+        auth: {
+          user: process.env.SENDGRID_USERNAME,
+          pass: process.env.SENDGRID_PASSWORD
         }
-      })
+      });
     }
     return nodemailer.createTransport({
-      host: process.env.EMAIL_HOST,
-      port: process.env.EMAIL_PORT,
+      service: 'gmail',
       auth: {
-        user: process.env.EMAIL_USERNAME,
-        pass: process.env.EMAIL_PASSWORD
+        user: 'info.runautomations@gmail.com',
+        pass: 'gyvomqwdqdlsdgje'
       }
     });
   }
-  async send  (template,subject){
+  async send(template, subject) {
     //render html based on pug template
-    const html = pug.renderFile(`${__dirname}/../views/email/${template}.pug`,{
-      firstName:this.firstName,
-      url:this.url,
+    const html = pug.renderFile(`${__dirname}/../views/email/${template}.pug`, {
+      firstName: this.firstName,
+      url: this.url,
       subject
-    })
+    });
     const mailOptions = {
       from: this.from,
       to: this.to,
@@ -44,11 +43,15 @@ module.exports = class Email {
     // this.newTransport()
     await this.newTransport().sendMail(mailOptions);
   }
-  async sendWelcome(){
-    await this.send('welcome','Welcome to the Natours website')
+  async sendWelcome() {
+    console.log('reached jere');
+    await this.send(
+      'welcome',
+      'Welcome to Run Automations Monitoring Platform'
+    );
   }
-  async sendPasswordReset(){
-    await this.send('passwordReset','your password reset token valid for 20 minutes')
+  async sendPasswordReset() {
+    await this.send('passwordReset', 'Request for password reset');
   }
 };
 const sendEmail = async options => {

@@ -4,9 +4,18 @@ const validator = require('validator');
 const bcrypt = require('bcryptjs');
 
 const userSchema = new mongoose.Schema({
-  name: {
+
+  first_name: {
     type: String,
-    required: [true, 'Please tell us your name!']
+    required: [true, 'Please tell us your first name!']
+  },
+  last_name: {
+    type: String,
+    required: [true, 'Please tell us your last name!']
+  },
+  phone_number: {
+    type: String,
+    required: [true, 'Please tell us your phone number!']
   },
   email: {
     type: String,
@@ -36,7 +45,7 @@ const userSchema = new mongoose.Schema({
   passwordResetExpires: Date,
   active: {
     type: Boolean,
-    default: true,
+    default: false,
     select: false
   },
   createdAt: {
