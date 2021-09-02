@@ -21,7 +21,7 @@ module.exports = class Email {
     return nodemailer.createTransport({
       service: 'gmail',
       auth: {
-        user: 'info.runautomations@gmail.com',
+        user: 'info.runautomations@gmail.com', 
         pass: 'gyvomqwdqdlsdgje'
       }
     });

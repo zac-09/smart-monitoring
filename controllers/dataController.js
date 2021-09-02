@@ -9,7 +9,7 @@ const moment = require('moment');
 const GET_DEVICE_PARAMS_EVENT = 'GET_DEVICE_PARAMATERS';
 process.env.TZ = 'Africa/Nairobi';
 exports.createData = catchAsync(async (req, res, next) => {
-  const device = await Device.findOne({ device_imei: req.body.device_imei });
+  const device = await Device.findOne({ device_imei: req.body.device_serial });
   if (!device) {
     return next(new AppError('device imei is inccorect', 400));
   }
@@ -18,7 +18,7 @@ exports.createData = catchAsync(async (req, res, next) => {
   const post = await Data.create({
     ...req.body,
     createdAt: new Date(),
-    device_imei: req.body.device_seria
+    device_imei: req.body.device_serial
   });
   if (socket.io) {
     socket.io.emit(`${GET_DEVICE_PARAMS_EVENT}-${post.device_imei}`, post);
