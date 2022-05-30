@@ -58,7 +58,7 @@ exports.signup = catchAsync(async (req, res, next) => {
   res.status(201).json({
     status: 'success',
     message:
-      'Account has been successfullt created please visit your email to confirm your account'
+      'Account has been successfully created please visit your email to confirm your account'
   });
 });
 
@@ -69,6 +69,7 @@ exports.login = catchAsync(async (req, res, next) => {
   if (!email || !password) {
     return next(new AppError('Please provide email and password!', 400));
   }
+
   // 2) Check if user exists && password is correct
   const user = await User.findOne({ email }).select('+password');
   // if (user.status === false) {
