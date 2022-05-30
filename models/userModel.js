@@ -7,15 +7,15 @@ const userSchema = new mongoose.Schema({
 
   first_name: {
     type: String,
-    required: [true, 'Please tell us your first name!']
+    // required: [true, 'Please tell us your first name!']
   },
   last_name: {
     type: String,
-    required: [true, 'Please tell us your last name!']
+    // required: [true, 'Please tell us your last name!']
   },
   phone_number: {
     type: String,
-    required: [true, 'Please tell us your phone number!']
+    // required: [true, 'Please tell us your phone number!']
   },
   email: {
     type: String,
