@@ -6,7 +6,7 @@ const deviceController = require('./../controllers/deviceController');
 router.post(
   '/registerDevice',
   authController.protect,
-  authController.restrictTo('admin'),
+
   deviceController.registerDevice
 );
 router.delete(
