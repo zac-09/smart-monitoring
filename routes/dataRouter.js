@@ -5,7 +5,7 @@ const authController = require('./../controllers/authController');
 
 const router = express.Router();
 
-router.post('/', controller.createData);
+router.get('/postData', controller.createData);
 router.use(authController.protect);
 router.get('/getDeviceData', controller.getDeviceData);
 router.get('/getDeviceLogs/:id', controller.getDeviceLogs);
